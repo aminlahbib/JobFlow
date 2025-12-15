@@ -423,7 +423,7 @@ sequenceDiagram
 ### 1. Dashboard Navigation Flow
 
 ```mermaid
-flowchart LR
+flowchart TB
     Dashboard[Main Dashboard] --> NewMatches[New Matches Tab]
     Dashboard --> Applications[Applications Tab]
     Dashboard --> Pipelines[Pipelines Tab]
