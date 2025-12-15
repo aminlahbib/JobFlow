@@ -1,5 +1,5 @@
 """
-Database connection and session management.
+Database configuration and session management.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -9,10 +9,10 @@ from sqlalchemy.pool import StaticPool
 
 from app.config import settings
 
-# Create async engine
+# Create async engine with psycopg (async)
 engine = create_async_engine(
-    settings.SQLALCHEMY_DATABASE_URI.replace("postgresql://", "postgresql+asyncpg://"),
-    echo=False,  # Set to True for SQL logging during development
+    settings.SQLALCHEMY_DATABASE_URI.replace("postgresql://", "postgresql+psycopg://"),
+    echo=True,
     future=True,
     poolclass=StaticPool,
 )
