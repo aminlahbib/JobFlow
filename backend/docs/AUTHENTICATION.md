@@ -45,6 +45,39 @@ OAuth endpoints are scaffolded and ready. To enable:
 
 2. Implement OAuth callback handlers in `auth.py`
 
+## Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant DB
+    
+    Client->>API: POST /auth/login (username, password)
+    API->>DB: Fetch user by email
+    DB-->>API: User record (hash)
+    API->>API: Verify password (bcrypt)
+    
+    alt Invalid Credentials
+        API-->>Client: 401 Unauthorized
+    else Valid Credentials
+        API->>API: Generate Access Token (12h)
+        API->>Client: Return Access Token
+        
+        note right of Client: Client stores token<br/>(e.g., localStorage/cookie)
+        
+        Client->>API: GET /protected-route (Bearer Token)
+        API->>API: Decode & Verify Token
+        API->>DB: Fetch user (optional check)
+        
+        alt Valid Token
+            API-->>Client: 200 OK (Data)
+        else Expired/Invalid
+            API-->>Client: 401 Unauthorized
+        end
+    end
+```
+
 ## API Endpoints
 
 ### Register New User
