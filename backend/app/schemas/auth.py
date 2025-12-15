@@ -2,6 +2,7 @@
 Authentication schemas.
 """
 
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -32,6 +33,7 @@ class UserUpdate(BaseModel):
     """User update schema."""
 
     email: Optional[str] = None
+    password: Optional[str] = None
     full_name: Optional[str] = None
     resume_text: Optional[str] = None
     timezone: Optional[str] = None
@@ -44,7 +46,9 @@ class User(BaseModel):
     email: str
     full_name: Optional[str]
     is_active: bool
-    created_at: str
+    resume_text: Optional[str] = None
+    timezone: Optional[str] = None
+    created_at: datetime
 
     class Config:
         from_attributes = True

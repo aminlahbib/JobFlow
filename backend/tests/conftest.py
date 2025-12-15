@@ -10,11 +10,12 @@ import pytest_asyncio
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import StaticPool
 
 from app.config import settings
 from app.database import Base, get_db
 from app.main import app
+from app import models  # Register models with Base
 
 # Test database URL (use in-memory SQLite for tests)
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
@@ -22,7 +23,8 @@ TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 # Create async engine for tests
 test_engine = create_async_engine(
     TEST_DATABASE_URL,
-    poolclass=NullPool,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
 )
 
 # Create async session factory
