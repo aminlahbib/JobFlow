@@ -1,3 +1,5 @@
+name: JobFlow
+
 services:
   # PostgreSQL Database
   postgres:
