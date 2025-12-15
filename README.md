@@ -283,33 +283,6 @@ Interactive API docs available at:
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
----
-
-## 📖 Project Structure
-
-```
-JobFlow/
-├── backend/                 # FastAPI backend
-│   ├── app/
-│   │   ├── api/            # API endpoints
-│   │   ├── core/           # Core utilities (security, celery)
-│   │   ├── models/         # Database models
-│   │   ├── schemas/        # Pydantic schemas
-│   │   └── tasks/          # Background tasks
-│   ├── tests/              # Backend tests
-│   └── requirements.txt    # Python dependencies
-├── frontend/               # Next.js frontend
-│   ├── src/
-│   │   ├── app/           # App router pages
-│   │   ├── components/    # React components
-│   │   └── lib/           # Utilities
-│   └── package.json       # Node dependencies
-├── docs/                  # Documentation
-├── openspec/              # OpenSpec workflow system
-└── README.md             # This file
-```
-
----
 
 ## 🤝 Contributing
 
