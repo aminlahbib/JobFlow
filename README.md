@@ -86,7 +86,7 @@ jobs_found = await jobflow.scrape_jobs(
 # Returns: 150+ relevant jobs in seconds
 ```
 
-#### 🎯 **Smart Filtering & Ranking**
+####  **Smart Filtering & Ranking**
 AI-powered job matching based on your profile:
 - Resume-based relevance scoring using GPT-4
 - Customizable filter pipelines (location, salary, type)
@@ -103,7 +103,7 @@ ranked_jobs = await jobflow.rank_jobs(
 # Returns: Top 20 matches with 85%+ relevance scores
 ```
 
-#### ✍️ **AI-Powered Motivation Letters**
+####  **AI-Powered Motivation Letters**
 Generate personalized cover letters in seconds:
 - OpenAI GPT-4 integration for natural language
 - Resume and job description analysis
@@ -121,7 +121,7 @@ letter = await jobflow.generate_letter(
 # Returns: Tailored 300-word cover letter in 3 seconds
 ```
 
-#### 📊 **Unified Application Tracking**
+####  **Unified Application Tracking**
 Manage your entire application lifecycle:
 - Status workflow: New → To Apply → Applied → Interview → Offer/Rejected
 - Multiple views: Table, Kanban, Timeline
@@ -139,7 +139,7 @@ await jobflow.update_application(
 )
 ```
 
-#### 🔐 **Secure Authentication & User Management**
+####  **Secure Authentication & User Management**
 Enterprise-grade security for your data:
 - JWT-based authentication with 30-day tokens
 - Bcrypt password hashing (12 rounds)
@@ -154,44 +154,63 @@ Enterprise-grade security for your data:
 JobFlow uses a modern, scalable architecture designed for performance and reliability:
 
 ```mermaid
-graph LR
-    A[User] --> B[Next.js Frontend]
-    B --> C[FastAPI Backend]
-    C --> D[PostgreSQL Database]
-    C --> E[Redis Cache]
-    C --> F[Celery Workers]
-    F --> G[Job Scrapers]
-    F --> H[OpenAI API]
-    G --> D
-    H --> D
+graph TB
+    subgraph "Frontend Layer"
+        A[User Browser]
+        B[Next.js App<br/>React 19 + TypeScript]
+    end
+    
+    subgraph "Backend Layer"
+        C[FastAPI Server<br/>Python 3.9+]
+        D[Celery Workers]
+        E[Celery Beat<br/>Scheduler]
+    end
+    
+    subgraph "Data Layer"
+        F[(PostgreSQL<br/>Database)]
+        G[(Redis<br/>Cache & Queue)]
+    end
+    
+    subgraph "External Services"
+        H[Job Boards<br/>Indeed, LinkedIn]
+        I[OpenAI API<br/>GPT-4]
+    end
+    
+    A --> B
+    B --> C
+    C --> F
+    C --> G
+    D --> F
+    D --> G
+    D --> H
+    D --> I
+    E --> D
+    
+    style A fill:#e1f5ff
+    style B fill:#4F46E5,color:#fff
+    style C fill:#009688,color:#fff
+    style F fill:#336791,color:#fff
+    style G fill:#DC382D,color:#fff
 ```
 
 ### Architecture Overview
 
-1. **Frontend (Next.js 15 + React 19)**
-   - Server-side rendering for SEO and performance
-   - TypeScript for type safety
-   - Responsive dashboard with real-time updates
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **Frontend** | Next.js 15 + React 19 | Server-side rendering, responsive UI, real-time updates |
+| **Backend API** | FastAPI + Python 3.9+ | Async REST API, JWT auth, OpenAPI documentation |
+| **Database** | PostgreSQL 16+ | ACID compliance, JSONB support, optimized indexes |
+| **Cache & Queue** | Redis 7 | Session storage, job queue, rate limiting |
+| **Task Queue** | Celery + Beat | Async job scraping, scheduled tasks, background processing |
+| **AI Engine** | OpenAI GPT-4 | Job ranking, cover letter generation, resume analysis |
 
-2. **Backend (FastAPI + Python 3.9+)**
-   - Async API with type hints
-   - RESTful endpoints with OpenAPI docs
-   - JWT authentication and authorization
+### Data Flow
 
-3. **Database (PostgreSQL 16+)**
-   - ACID compliance for data integrity
-   - JSONB support for flexible job data
-   - Optimized indexes for fast queries
-
-4. **Background Jobs (Celery + Redis)**
-   - Asynchronous job scraping
-   - Scheduled refresh cycles
-   - Rate limiting and retry logic
-
-5. **AI Integration (OpenAI GPT-4)**
-   - Job relevance scoring
-   - Cover letter generation
-   - Resume parsing and analysis
+1. **User Interaction** → Frontend sends requests to Backend API
+2. **Job Discovery** → Celery workers scrape job boards on schedule
+3. **AI Processing** → GPT-4 ranks jobs and generates cover letters
+4. **Data Storage** → PostgreSQL stores all application data
+5. **Real-time Updates** → Redis enables live dashboard updates
 
 ---
 
@@ -217,9 +236,9 @@ docker-compose exec backend alembic upgrade head
 ```
 
 **That's it!** All services are now running:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+- 🌐 Frontend: http://localhost:3000
+- ⚡ Backend API: http://localhost:8000
+- 📚 API Docs: http://localhost:8000/docs
 
 See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
 
@@ -227,7 +246,7 @@ See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
 
 ### Option 2: Local Development
 
-### Prerequisites
+#### Prerequisites
 
 - **Python 3.9+** (for backend)
 - **Node.js 18+** (for frontend)
@@ -235,16 +254,16 @@ See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
 - **Redis** (caching and job queue)
 - **OpenAI API Key** (for AI features)
 
-### Installation
+#### Installation
 
-#### 1. Clone the Repository
+**1. Clone the Repository**
 
 ```bash
 git clone https://github.com/aminlahbib/JobFlow.git
 cd JobFlow
 ```
 
-#### 2. Backend Setup
+**2. Backend Setup**
 
 ```bash
 cd backend
@@ -269,7 +288,7 @@ uvicorn app.main:app --reload
 
 Backend will be available at `http://localhost:8000`
 
-#### 3. Frontend Setup
+**3. Frontend Setup**
 
 ```bash
 cd ../frontend
@@ -287,7 +306,7 @@ npm run dev
 
 Frontend will be available at `http://localhost:3000`
 
-#### 4. Start Background Workers (Optional)
+**4. Start Background Workers (Optional)**
 
 ```bash
 cd backend
@@ -301,11 +320,11 @@ celery -A app.core.celery_app beat --loglevel=info
 
 ### First Steps
 
-1. **Register an account** at `http://localhost:3000/auth/signup`
-2. **Upload your resume** in your profile settings
-3. **Create a search pipeline** with your job preferences
-4. **Let JobFlow find jobs** - automated scraping runs every 6-12 hours
-5. **Review and apply** - use AI-generated cover letters for top matches
+1. 📝 **Register an account** at `http://localhost:3000/auth/signup`
+2. 📄 **Upload your resume** in your profile settings
+3. 🔍 **Create a search pipeline** with your job preferences
+4. 🤖 **Let JobFlow find jobs** - automated scraping runs every 6-12 hours
+5. ✉️ **Review and apply** - use AI-generated cover letters for top matches
 
 ### API Documentation
 
@@ -313,20 +332,76 @@ Interactive API docs available at:
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
+---
 
-## 🤝 Contributing
+## 📁 Project Structure
+
+```
+JobFlow/
+├── backend/                    # FastAPI backend
+│   ├── app/
+│   │   ├── api/               # API endpoints
+│   │   │   └── v1/
+│   │   │       ├── endpoints/ # Route handlers
+│   │   │       └── api.py     # API router
+│   │   ├── core/              # Core utilities
+│   │   │   ├── security.py    # JWT & password hashing
+│   │   │   └── celery_app.py  # Celery configuration
+│   │   ├── models/            # SQLAlchemy models
+│   │   ├── schemas/           # Pydantic schemas
+│   │   ├── tasks/             # Celery tasks
+│   │   ├── config.py          # Settings
+│   │   └── main.py            # FastAPI app
+│   ├── tests/                 # Backend tests
+│   ├── alembic/               # Database migrations
+│   ├── Dockerfile             # Backend container
+│   └── requirements.txt       # Python dependencies
+├── frontend/                  # Next.js frontend (submodule)
+│   ├── src/
+│   │   ├── app/              # App router pages
+│   │   ├── components/       # React components
+│   │   └── lib/              # Utilities
+│   ├── Dockerfile            # Frontend container
+│   └── package.json          # Node dependencies
+├── docs/                     # Documentation
+├── openspec/                 # OpenSpec workflow system
+├── docker-compose.yml        # Full stack orchestration
+├── DOCKER.md                 # Docker documentation
+└── README.md                 # This file
+```
+
+---
+
+## 🎯 Features Roadmap
+
+| Feature | Status | Description |
+|---------|--------|-------------|
+| 🔐 Authentication | ✅ Complete | JWT auth, OAuth, GDPR compliance |
+| 🔍 Job Scraping | 🚧 In Progress | Multi-source job ingestion |
+| 🎯 AI Ranking | 📋 Planned | GPT-4 powered job matching |
+| ✍️ Cover Letters | 📋 Planned | AI-generated personalized letters |
+| 📊 Application Tracking | 📋 Planned | Kanban board, analytics |
+| 📧 Email Integration | 📋 Planned | Auto-send applications |
+| 📱 Mobile App | 💡 Future | iOS & Android apps |
+
+---
+
+## 🤝
+
+
+##  Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Built with [FastAPI](https://fastapi.tiangolo.com/)
 - Powered by [OpenAI GPT-4](https://openai.com/)
