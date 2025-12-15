@@ -40,7 +40,7 @@ For detailed guides, API references, and comprehensive examples, visit our docum
 
 ---
 
-## 🎯 Why JobFlow?
+##  Why JobFlow?
 
 ### The Problem
 
@@ -64,13 +64,13 @@ Job seekers face significant challenges in today's competitive market:
 
 ---
 
-## ✨ What JobFlow Does
+##  What JobFlow Does
 
 JobFlow automates your entire job search pipeline while maintaining personalization and quality.
 
 ### Core Features
 
-#### 🔍 **Multi-Source Job Ingestion**
+####  **Multi-Source Job Ingestion**
 Automatically scrape and aggregate job listings from multiple platforms:
 - Indeed, StepStone, LinkedIn integration
 - 6-12 hour refresh cycles for latest opportunities
@@ -196,6 +196,36 @@ graph LR
 ---
 
 ## 🚀 Quick Start
+
+### Option 1: Docker (Recommended)
+
+The fastest way to get started:
+
+```bash
+# Clone the repository
+git clone https://github.com/aminlahbib/JobFlow.git
+cd JobFlow
+
+# Start all services with Docker
+docker-compose up -d
+
+# Run database migrations
+docker-compose exec backend alembic upgrade head
+
+# Create your first user
+# Visit http://localhost:3000
+```
+
+**That's it!** All services are now running:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+See [DOCKER.md](DOCKER.md) for detailed Docker documentation.
+
+---
+
+### Option 2: Local Development
 
 ### Prerequisites
 
