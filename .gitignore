@@ -228,7 +228,7 @@ temp/
 *~
 
 # AI/Agentic tool directories
-.cursor/
+
 .kilocode/
 .aider*/
 .copilot/
@@ -275,7 +275,7 @@ playwright-report/
 playwright/.cache/
 
 # OpenSpec - ignore entire directory as requested
-openspec/
+
 
 # Local development
 .env.local
