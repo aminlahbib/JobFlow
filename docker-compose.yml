@@ -1,0 +1,148 @@
+name: JobFlow
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: jobflow-postgres
+    environment:
+      POSTGRES_DB: jobflow
+      POSTGRES_USER: jobflow
+      POSTGRES_PASSWORD: jobflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobflow -d jobflow"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+
+  # Redis for caching and job queue
+  redis:
+    image: redis:7-alpine
+    container_name: jobflow-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobflow-backend
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=jobflow
+      - POSTGRES_PASSWORD=jobflow
+      - POSTGRES_DB=jobflow
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - BACKEND_CORS_ORIGINS=["http://localhost:3000","http://frontend:3000"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobflow-celery-worker
+    command: celery -A app.core.celery_app worker --loglevel=info
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=jobflow
+      - POSTGRES_PASSWORD=jobflow
+      - POSTGRES_DB=jobflow
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+      - backend
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+
+  # Celery Beat (Scheduler)
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobflow-celery-beat
+    command: celery -A app.core.celery_app beat --loglevel=info
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=jobflow
+      - POSTGRES_PASSWORD=jobflow
+      - POSTGRES_DB=jobflow
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+      - backend
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: jobflow-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - jobflow-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  jobflow-network:
+    driver: bridge
