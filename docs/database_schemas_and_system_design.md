@@ -853,7 +853,7 @@ flowchart TD
 ### Redis Usage Patterns
 
 ```mermaid
-graph LR
+graph TB
     subgraph "Redis Data Structures"
         Strings[Strings<br/>Sessions, Tokens]
         Hashes[Hashes<br/>User Profiles Cache]
@@ -868,14 +868,21 @@ graph LR
         LongTTL[30 days<br/>Sessions]
     end
     
-    Strings --> ShortTTL
+    Strings --> LongTTL
     Hashes --> MediumTTL
     Sets --> MediumTTL
     SortedSets --> MediumTTL
     Lists --> NoTTL[No TTL<br/>Task Queues]
     
-    style Strings fill:#dc382d,color:#fff
-    style SortedSets fill:#dc382d,color:#fff
+    style Strings fill:#e1f5ff
+    style Hashes fill:#e1f5ff
+    style Sets fill:#e1f5ff
+    style SortedSets fill:#e1f5ff
+    style Lists fill:#e1f5ff
+    style ShortTTL fill:#fff9c4
+    style MediumTTL fill:#fff9c4
+    style LongTTL fill:#fff9c4
+    style NoTTL fill:#f3e5f5
 ```
 
 ### Data Partitioning Strategy
