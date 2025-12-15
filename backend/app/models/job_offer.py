@@ -35,7 +35,7 @@ class JobOffer(Base):
     salary_currency = Column(String, default="EUR")
 
     # Metadata
-    metadata = Column(JSON, nullable=True)  # Additional data like company logo, benefits, etc.
+    job_metadata = Column(JSON, nullable=True)  # Additional data like company logo, benefits, etc.
     posted_at = Column(DateTime, nullable=True)
     scraped_at = Column(DateTime(timezone=True), server_default=func.now())
     is_active = Column(Boolean, default=True)

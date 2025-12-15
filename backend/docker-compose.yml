@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -13,12 +11,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jobflow -d jobflow"]
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
   # Redis for caching and job queue
   redis:
@@ -28,11 +26,37 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
+
+  # Backend API (optional - for full containerization)
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: jobflow-backend
+  #   environment:
+  #     - POSTGRES_SERVER=postgres
+  #     - POSTGRES_USER=jobflow
+  #     - POSTGRES_PASSWORD=jobflow
+  #     - POSTGRES_DB=jobflow
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   volumes:
+  #     - .:/app
+  #   restart: unless-stopped
 
 volumes:
   postgres_data:
