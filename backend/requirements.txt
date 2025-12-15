@@ -19,7 +19,7 @@ celery==5.3.4
 redis==5.0.1
 
 # HTTP client for scraping
-httpx==0.25.2
+httpx==0.28.1
 beautifulsoup4==4.12.2
 
 # OpenAI
