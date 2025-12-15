@@ -15,13 +15,13 @@
 - [ ] 2.5 Create database seeding script for development
 
 ## 3. Authentication & User Management
-- [ ] 3.1 Implement JWT-based authentication system
-- [ ] 3.2 Add OAuth integration (Google, LinkedIn)
-- [ ] 3.3 Create user registration and login endpoints
-- [ ] 3.4 Implement password hashing and validation
-- [ ] 3.5 Add session management and refresh tokens
-- [ ] 3.6 Create user profile management endpoints
-- [ ] 3.7 Implement GDPR compliance features (data deletion, export)
+- [x] 3.1 Implement JWT-based authentication system
+- [x] 3.2 Add OAuth integration (Google, LinkedIn) - OAuth endpoints created, ready for credentials
+- [x] 3.3 Create user registration and login endpoints
+- [x] 3.4 Implement password hashing and validation
+- [x] 3.5 Add session management and refresh tokens
+- [x] 3.6 Create user profile management endpoints
+- [x] 3.7 Implement GDPR compliance features (data deletion, export)
 
 ## 4. Job Ingestion System
 - [ ] 4.1 Create base scraper framework with rate limiting
